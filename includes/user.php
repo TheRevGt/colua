@@ -788,6 +788,7 @@ class User extends DB{
                 echo "<th> Dirección Ip </th>";
                 echo "<th> Problema </th>";
                 echo "<th> Estado </th>";
+                echo "<th> Comentario </th>";
                 echo "<th> Fecha de entrada </th>";
                 echo "<th> Fecha de solución </th>";
                 echo "<tr>";
@@ -801,6 +802,7 @@ class User extends DB{
                 echo "<td>".$res["ip"]."</td>";
                 echo "<td>".$res["problema"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                echo "<td>".$res["Cometario"]."</td>";
                 echo "<td>".$res["fecha_activo"]."</td>";
                 echo "<td>".$res["fecha_solucion"]."</td>";
                 echo "</tr>";                                   
