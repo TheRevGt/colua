@@ -1,0 +1,24 @@
+function guardar(){   
+    var op = document.getElementById("opd").value;
+    var cac = document.getElementById("c_act").value;
+    var mar = document.getElementById("marca").value;
+    var mod = document.getElementById("modelo").value;
+    var nser = document.getElementById("n_serie").value;
+    var dat = document.getElementById("date").value;
+    var es = document.getElementById("d_estado").value;
+    var fila="<td class='tipo'>"+op+"</td><td class='codigo'>"+cac +"</td><td class='marca'>"+mar +"</td><td class='modelo'>"+mod +"</td><td class='serie'>"+nser +"</td><td class='fecha'>"+dat +"</td><td class='estado'>"+es +"</td>";
+    var btn = document.createElement("tr");
+    btn.innerHTML=fila;
+    document.getElementById("tablita").appendChild(btn);
+    document.getElementById("opd").value = "";
+    document.getElementById("c_act").value = "";
+    document.getElementById("marca").value = "";
+    document.getElementById("modelo").value = "";
+    document.getElementById("n_serie").value = "";
+    document.getElementById("date").value = "";
+}
+function elimina(){
+    var fila=document.getElementById('f').value;
+    var fi=fila-1;
+    document.getElementById("tablita").deleteRow(fi);
+}
