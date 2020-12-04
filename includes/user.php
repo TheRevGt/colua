@@ -776,7 +776,7 @@ class User extends DB{
     public function todosoporte(){
      $query = $this->connect()->prepare("SELECT * FROM soporte");
         $query->execute();
-        echo "<br> <h2>Todos los tickets</h2>";
+        echo "<br> <h2>Todos los tickets:</h2>";
         echo "<div class='ared'>
         <table id='resultado'>";     
                 echo "<div><tr>";
