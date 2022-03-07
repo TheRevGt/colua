@@ -13,7 +13,7 @@ $user= new User();
 		        $query->execute([$agen]);
 		        $resultado=$query->fetchAll();
 		        foreach ($resultado as $res) {
-		        	$tipo='<option value="'.$res["no_activo"].'">'.$res["nombre"].' ('.$res["no_activo"].')</option> ';
+		        	echo '<option value="'.$res["no_activo"].'">'.$res["nombre"].' ('.$res["no_activo"].')</option> ';
 		        	//$estado='<option value="'.$res["estado"].'">'.$res["estado"].'</option> ';
 		        	echo json_encode([$tipo]);
 		        }

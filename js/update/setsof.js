@@ -18,6 +18,7 @@ function upsof1(){
   axios.post('../../includes/update/setso.php', acr)
   .then(function (response) {
     alert(response.data);
+    window.location.href = "software.php";
   })
   .catch(function (error) {
     console.log(error);

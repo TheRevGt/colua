@@ -2,61 +2,125 @@
 <html>
 <head>
 	<title>Soporte</title>
-	<link rel="stylesheet" href="../../css/main.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="icon" type="image/jpg" href="../../img/ico.png">
+	<link href="../../css/dashboard.css" rel="stylesheet">
 	<script src="../../js/min.js"></script>
 </head>
 <body>
-<div id="container">
-    <nav>
-        <ul>
-        <li><?php  include_once '../../includes/user.php';
-				$user = new User(); echo $user->getNombre(); ?></li>
-		<li><a href="../soporte/todos.php">Soporte</a></li>
-	    <li><a href="../registrar/agencia.php">Equipos<i class="down"></i></a>
-            <ul>
-                <li><a href="../registrar/agencia.php">Registrar</a></li>
-                <li><a href="../actualiza/agencia.php">Actualizar</a></li>
-                <li><a href="../consultas/agencia.php">Consultar</a></li>
-            </ul>       
-        </li>
-	    <li><a href="../registro.php">Usuario</a></li>
-	    <li><a href="../../includes/logout.php">Cerrar sesión</a></li>
-	  	</ul>
-	</nav>
-
-	<!-- contenido de la pagina-->
-	<div class="">
-		<div class="menu">
-			<br>
-			<br>
-			<br>
-			<br>
-			<li><a href="todos.php"><img src="../../img/todo.png" class="ico"> Todos </a> </li>
-			<li><a href="usuario.php"><img src="../../img/user.png" class="ico"> Usuario </a> </li>
-			<li><a href="estados.php"><img src="../../img/estado.png" class="ico"> Estado </a></li>
-		</div>
-
-		<div class="main">
-	    	<div class="padre" style="text-align: center;">
-	    		<div class="hijo">
-	    			<section>			    	
-						Tecnico:
-						<select id="tecnico">
+	<!-- Nav-->
+	<nav class="nav sticky-top flex-md-nowrap p-0 shadow bg-light align-items-center">
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Soporte</a>
+	    <div class="float-right" style="float: right;">
+	    <button class="navbar-toggler  d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+	    <span data-feather="menu"></span>
+	    </button>	
+	    </div>
+	    
+	      <div class="nav">
+	      <ul class="nav px-4">
+	        <li class="nav-item text-nowrap"></span><a class="nav-link" href="../soporte/todos.php">Soporte</a>
+	        </li>
+	      </ul>
+	      <ul class="nav px-4">
+	        <li class="dropdown">
+	            <a class="nav-link dropdown-toggle" id="menunav" role="button" data-toggle="dropdown">
+	              Equipos
+	            </a>
+	            <div class="dropdown-menu" aria-labelledby="menunav">
+	              <a class="dropdown-item" href="../registrar/agencia.php">Registro</a>
+	              <div class="dropdown-divider"></div>
+	              <a class="dropdown-item" href="../actualiza/agencia.php">Actualizar</a>
+	              <div class="dropdown-divider"></div>
+	              <a class="dropdown-item" href="../consultas/agencia.php">Consultar</a>
+	            </div>
+	          </li>
+	      </ul>
+	      <ul class="nav px-4">
+	        <li class="nav-item text-nowrap">
+	          <a class="nav-link" href="../registro.php">Usuarios</a>
+	        </li>
+	      </ul>
+	      <ul class="nav px-3">
+	        <li class="nav-item text-nowrap">
+	          <a class="nav-link" href="../../includes/logout.php">Cerrar sesión</a>
+	        </li>
+	      </ul>
+	    </div>
+	  </nav>
+	<div class="container-fluid">
+	  <div class="row">
+	    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+	      <div class="sidebar-sticky pt-5">
+	        <ul class="nav flex-column">
+	          <li class="nav-item pb-2">
+	            <a class="nav-link" href="todos.php">
+	              <span data-feather="list"></span>
+	              Todos
+	            </a>
+	          </li>
+	          <li class="nav-item pb-2">
+	            <a class="nav-link" href="usuario.php">
+	              <span data-feather="users"></span>
+	              Usuario
+	            </a>
+	          </li>
+	          <li class="nav-item pb-2">
+	            <a class="nav-link active" href="estados.php">
+	              <span data-feather="star"></span>
+	              Estado
+	            </a>
+	          </li>
+	        </ul>
+	      </div>
+	      <footer class="pt-1 my-md-5 pt-md-5 fixed-bottom">
+		    <div>
+		      <div class="col-12 col-md">
+		        <img class="mb-2" src="../../img/logo.png" width="150">
+		        <small class="d-block mb-3 text-muted">&copy; 2020</small>
+		      </div>
+		    </div>
+		  </footer>
+	    </nav>
+	    <?php include_once '../../includes/user.php'; $user = new User(); ?>
+	    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-5 align-items-center"> 
+	     	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+	        <h1 class="h2">Datos del la consulta</h1>
+	      	</div>
+	      	<div class="form w-75">
+	      		<div class="form-group row">
+			    	<label class="col-sm-2 col-form-label h4">Tecnico:</label>
+			    	<div class="col-sm-10">			    
+			    		<select class="form-control" id="tecnico">
 							<?php $user->adcopor()?>
 						</select>
-						Estado: 
-			    		<select id="estado">
+			    	</div>
+				</div>
+				<div class="form-group row">
+			    	<label class="col-sm-2 col-form-label h4">Estado:</label>
+			    	<div class="col-sm-10">			    
+			    		<select class="form-control" id="estado">
 							<option value="Activo">Activo</option>
 							<option value="Resuelto">Resuelto</option>
 						</select>
-						<input type="button" value="Consultar" onclick="consule()" style="width: 150px">
-			    		<div id="usin">
-			    		</div>			    		
-			    	</section>
-			    </div>
-	    	</div>
-		</div>
+			    	</div>
+				</div>
+				<div class="form-group row">
+					<div class="sticky-top col-sm-10">
+						<input class="btn float-right text-white bg-colua" type="button" value="Consultar" onclick="consule()">  
+					</div>
+				</div>
+			</div>
+			<div class="table-responsive-sm" id="usin">
+				
+			</div>
+	    </main>
+	  </div>
+	</div>
+	<script src="../../dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/feather.min.js"></script>
+    <script src="../../js/dashboard.js"></script>
 	<script type="text/javascript" src="../../js/axios.js"></script>
 	<script type="text/javascript" src="../../js/soporte/consultae.js"></script>
 </body>

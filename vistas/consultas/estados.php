@@ -2,101 +2,173 @@
 <html>
 <head>
     <title>Consulta estado</title>
-    <link rel="stylesheet" href="../../css/main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/jpg" href="../../img/ico.png">
+    <link href="../../css/dashboard.css" rel="stylesheet">
     <script src="../../js/min.js"></script>
 </head>
 <body>
-    <div id="container">
-    <nav>
-        <ul>
-        <li><?php include_once '../../includes/user.php';
-                $user = new User(); echo $user->getNombre(); ?></li>
-        <li><a href="../soporte/todos.php">Soporte</a></li>
-        <li><a href="../registrar/agencia.php">Equipos<i class="down"></i></a>
-            <ul>
-                <li><a href="../registrar/agencia.php">Registrar</a></li>
-                <li><a href="../actualiza/agencia.php">Actualizar</a></li>
-                <li><a href="../consultas/agencia.php">Consultar</a></li>
-            </ul>       
-        </li>
-        <li><a href="../registro.php">Usuario</a></li>
-        <li><a href="../../includes/logout.php">Cerrar sesión</a></li>
-        </ul>
-    </nav>
-    <div class="menu">
-        <br>
-        <br>
-        <br>
-        <li><a href="agencia.php"><img src="../../img/agencia.png" class="ico"> Agencia </a> </li>
-        <li><a href="areas.php"><img src="../../img/areas.png" class="ico"> Area </a> </li>
-        <li><a href="empleado.php"><img src="../../img/emple.png" class="ico"> Empleado </a> </li>
-        <li><a href="activos.php"><img src="../../img/activo.png" class="ico"> Activo </a> </li>
-        <li><a href="estados.php"><img src="../../img/estado.png" class="ico"> Estado </a> </li>
-        <li><a href="red.php"><img src="../../img/red.png" class="ico"> Estado red </a> </li>
-    </div>
-
-    <!-- contenido de la pagina-->
-    <div class="main">
-        <div class="cons">
-        <section style="padding-left: 220px">
-            <br>
-            <h2>Consultas por estado</h2><br>
-            <form method="POST" action="">
-            <select name="consulta">
-                <optgroup label="Estado de equipo">
-                    <option value="Excelente">Excelente</option>
-                    <option value="Bueno">Bueno</option>
-                    <option value="Deficiente">Deficiente</option>
-                </optgroup>
-                <optgroup label="Existencia">
-                    <option value="1">Menos de 3 años</option>
-                    <option value="3">Más de 3 años</option>
-                    <option value="4">De baja</option>
-                </optgroup>
-
-            </select><br>
-                <input type="submit" value="Consultar" class="boton" name="send">
-            </form>
-        </div>
-    </section>
-    <section id="general" style="padding-left: 220px">
-    <div id="tab">
-        <br>
-        <?php
-        include_once '../../includes/user.php';
-        $user = new User();
-        if (isset($_POST['send'])) {
-            $consulta=$_POST['consulta'];
-            if ($consulta==1) {
-                $user->verexip();
-                $user->verexid();
-
-            } elseif ($consulta==3) {
-                $user->verexip1();
-                $user->verexid1();
-
-            } elseif ($consulta==4) {
-                $user->verbajapc();
-                $user->verbajadp();
-            }
-            else{
-                $user->vereestado($consulta);
-                $user->verestadosdc($consulta);
-            }
-                   
-        }?>
-        </div>
-        </div>
-        <br>
-        <div style="padding-left: 220px">
-            Exportar a excel<br>
-        <button onclick="exportTableToExcel('resultado', 'Reporte de equipos area de trabajo')" style="width: 150px; background-color:none;" class="xpore">Equipos</button>
-        <button onclick="exportTableToExcel('resultado2', 'Reporte de dispositivo area de trabajo')" style="width: 150px;" class="xpore">Dispositivos</button>
+    <!-- Nav-->
+    <nav class="nav sticky-top flex-md-nowrap p-0 shadow bg-light align-items-center">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Resgistro</a>
+        <div class="float-right" style="float: right;">
+        <button class="navbar-toggler  d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span data-feather="menu"></span>
+        </button>   
         </div>
         
+          <div class="nav">
+          <ul class="nav px-4">
+            <li class="nav-item text-nowrap"></span><a class="nav-link" href="../soporte/todos.php">Soporte</a>
+            </li>
+          </ul>
+          <ul class="nav px-4">
+            <li class="dropdown">
+                <a class="nav-link dropdown-toggle" id="menunav" role="button" data-toggle="dropdown">
+                  Equipos
+                </a>
+                <div class="dropdown-menu" aria-labelledby="menunav">
+                  <a class="dropdown-item" href="../registrar/agencia.php">Registro</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="../actualiza/agencia.php">Actualizar</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="../consultas/agencia.php">Consultar</a>
+                </div>
+              </li>
+          </ul>
+          <ul class="nav px-4">
+            <li class="nav-item text-nowrap">
+              <a class="nav-link" href="../registro.php">Usuarios</a>
+            </li>
+          </ul>
+          <ul class="nav px-3">
+            <li class="nav-item text-nowrap">
+              <a class="nav-link" href="../../includes/logout.php">Cerrar sesión</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="sidebar-sticky pt-5">
+            <ul class="nav flex-column">
+              <li class="nav-item pb-2">
+	              <a class="nav-link" href="general.php">
+                  <span data-feather="monitor"></span>
+                  General
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link" href="agencia.php">
+                  <span data-feather="map-pin"></span>
+                  Agencia
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link" href="areas.php">
+                  <span data-feather="git-merge"></span>
+                  Área
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link" href="empleado.php">
+                  <span data-feather="users"></span>
+                  Empleado
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link" href="activos.php">
+                  <span data-feather="hash"></span>
+                  Activo
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link active" href="estados.php">
+                  <span data-feather="star"></span>
+                  Estado
+                </a>
+              </li>
+              <li class="nav-item pb-2">
+                <a class="nav-link" href="red.php">
+                  <span data-feather="server"></span>
+                  Redes
+                </a>
+              </li>
+            </ul>
+          </div>
+          <footer class="pt-1 my-md-5 pt-md-5 fixed-bottom">
+            <div>
+              <div class="col-12 col-md">
+                <img class="mb-2" src="../../img/logo.png" width="150">
+                <small class="d-block mb-3 text-muted">&copy; 2020</small>
+              </div>
+            </div>
+          </footer>
+        </nav>
+    <?php include_once '../../includes/user.php'; $user = new User(); ?>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-5 align-items-center"> 
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">Consulta por estado de equipo</h1>
+            </div>
+            <form class="form w-75" method="POST">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label h4">Estado:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="consulta">
+                        <optgroup label="Estado de equipo">
+                            <option value="Excelente">Excelente</option>
+                            <option value="Bueno">Bueno</option>
+                            <option value="Deficiente">Deficiente</option>
+                        </optgroup>
+                        <optgroup label="Existencia">
+                            <option value="1">Menos de 3 años</option>
+                            <option value="3">Más de 3 años</option>
+                            <option value="4">De baja</option>
+                        </optgroup>
+
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="sticky-top col-sm-10">
+                        <input class="btn float-right text-white bg-colua" type="submit" value="Consultar" name="send">  
+                    </div>
+                </div>
+            </form>
+            <div id="tab" class="table-responsive">
+                <?php
+                if (isset($_POST['send'])) {
+                $consulta=$_POST['consulta'];
+                if ($consulta==1) {
+                    $user->verexip();
+                    $user->verexid();
+
+                } elseif ($consulta==3) {
+                    $user->verexip1();
+                    $user->verexid1();
+
+                } elseif ($consulta==4) {
+                    $user->verbajapc();
+                    $user->verbajadp();
+                }
+                else{
+                    $user->vereestado($consulta);
+                    $user->verestadosdc($consulta);
+                }
+                       
+            }?>
+            </div>
+            <div class=" align-items-center">
+                <button onclick="exportTableToExcel('resultado', 'Reporte de equipo')" class='btn text-white bg-export'>Guardar equipo <span data-feather="monitor"></button>
+                <button onclick="exportTableToExcel('resultado3', 'Reporte de dispositivo')" class='btn text-white bg-export'>Guardar dispositivo <span data-feather="server"></button>
+                <button type="button" value="Create PDF" id="btPrint" onclick="createPDF()" class='btn text-white bg-export'>Guardar en PDF <span data-feather="file-text"></button>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
-    <input type="button" value="Create PDF" id="btPrint" onclick="createPDF()" style="width: 100px">
     <script type="text/javascript">
         function createPDF() {
         var fe= new Date();
@@ -119,6 +191,9 @@
         win.print();    
     }
     </script>
+    <script src="../../dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/feather.min.js"></script>
+    <script src="../../js/dashboard.js"></script>
     <script type="text/javascript" src="../../js/tabla.js"></script>
 </body>
 </html>

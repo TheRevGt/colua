@@ -34,7 +34,8 @@ $user= new User();
 										$sql="INSERT INTO pc(empleado,no_activo,tipo,so,edicion,licencia,marca,modelo,serie,ip,fecha_entrada,mack_pc,estado,estatus) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	        							$stmt=$user->connect()->prepare($sql);
 					            		if ($stmt->execute([$emple,$activop,$tipop,$so,$edicionp,$li,$marcap,$modelop,$seriep,$ip,$fechap,$mac,$estadop," "])) {
-					                		echo "Equipo agregado";
+					                		echo json_encode([true]);
+
 								        }else{
 								            echo "Error";
 								        }

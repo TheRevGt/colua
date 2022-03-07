@@ -19,7 +19,7 @@ if(isset($_SESSION['user'])){
         include_once 'vistas/inicio.php';
     }else{
         //echo "No existe el usuario";
-        $errorLogin = "<center> <p class='errro'>Error de datos </p></center></br>";
+        $errorLogin = "<script> alert('Datos incorrectos');</script>";
         include_once 'vistas/login.php';
     }
 }else{

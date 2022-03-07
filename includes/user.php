@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include 'db.php';
 class User extends DB{
     private $nombre;
@@ -166,7 +166,7 @@ class User extends DB{
         $sql5 =("UPDATE users SET n_user=?, pass=?, correo=?, nombre=? where n_user=?");
         $stmt5=$this->connect()->prepare($sql5);
         if ($stmt5->execute([$us,$pa,$ema,$nom,$rus])) {
-            echo "<script>alert('Usario actualizado')window.location.href='registro.php';</script>";
+            echo "<script> alert('Usuario actualizado') </script>";
         }else{
             echo "<script>alert('Error')</script>";
         }
@@ -195,6 +195,14 @@ class User extends DB{
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             echo '<option value="'.$res["nombre"].'">'.$res["nombre"].'</option>';            
+        }
+    }
+    public function veridpc(){
+        $query = $this->connect()->prepare("SELECT * FROM pc WHERE estatus = ''");
+        $query->execute();
+        $resultado=$query->fetchAll();
+        foreach ($resultado as $res) {
+            echo '<option value="'.$res["id"].'">'.$res["no_activo"].'</option>';            
         }
     }
     public function verpuesto(){
@@ -227,7 +235,7 @@ class User extends DB{
                 <td>'.$res["modelo"].'</td>
                 <td>'.$res["serie"].'</td>
                 <td>'.$res["ip"].'</td>
-                <td>'.$res["fecha_entrada"].'</td>
+                <td>'.date("d/m/Y", strtotime($res["fecha_entrada"])).'</td>
                 <td>'.$res["estado"].'</td>
                 </tbody>');          
         }
@@ -265,7 +273,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
@@ -295,7 +303,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -305,10 +313,10 @@ class User extends DB{
     public function verempleado($valor){
         $query = $this->connect()->prepare("SELECT * FROM pc WHERE empleado=? and estatus=' '");
         $query->execute([$valor]);
-        echo "<p>".$valor."</p>";
-        echo "<br> <h2>Datos de equipo </h2>";
-        echo "<table id='vrpcem'>";     
-                echo "<tr>";
+        echo "<h2>Empleado: $valor </h2>";
+        echo "<br> <h3>Datos de equipo </h3>";
+        echo "<table class='table table-hover table-sm' id='vrpcem'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -321,8 +329,10 @@ class User extends DB{
                 echo "<th> IP </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
-                echo "<td> Estado</td>";
-                echo "<tr>";
+                echo "<th> Estado</th>";
+                echo "<th> Software</th>";
+                echo "<th> Edición </th>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -335,9 +345,16 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
                 echo "</tr>";                                   
         }
         echo "</table>";
@@ -346,11 +363,11 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM software WHERE empleado=?");
         $query->execute([$valor]);
         echo "<br> <h2>Datos del software </h2>";
-        echo "<table id='resultado2'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado2'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Nombre de software </th>";
                 echo "<th> Edición </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["nombre"]."</td>";
@@ -363,8 +380,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM dispositivo WHERE empleado=?");
         $query->execute([$valor]);
         echo "<br> <h2>Datos del dispositivo </h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Marca </th>";
@@ -372,7 +389,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["nombre"]."</td>";
@@ -380,7 +397,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -392,10 +409,10 @@ class User extends DB{
             FROM empleado e, pc p
             WHERE ?=e.area and e.nombres=p.empleado;");
         $query->execute([$valor]);
-        echo "<h2>$valor</h2>";
-        echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<h2>Área: $valor</h2>";
+        echo "<h3>Datos de equipo </h3>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -408,8 +425,10 @@ class User extends DB{
                 echo "<th> IP </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
-                echo "<td> Estado </td>";
-                echo "<tr>";
+                echo "<th> Estado </th>";
+                echo "<th> Software </th>";
+                echo "<th> Edición </th>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -422,9 +441,16 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
                 echo "</tr>";                                   
         }
         echo "</table>";
@@ -434,13 +460,13 @@ class User extends DB{
         FROM empleado e, software p
         WHERE ?=e.area and e.nombres=p.empleado;");
         $query->execute([$valor]);
-        echo "<br> <h2>Datos del software </h2>";
-        echo "<table id='resultado2'>";     
-                echo "<tr>";
+        echo "<br> <h3>Datos del software </h3>";
+        echo "<table class='table table-hover table-sm' id='resultado2'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre de software </th>";
                 echo "<th> Edición </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -455,9 +481,9 @@ class User extends DB{
             FROM empleado e, dispositivo p
             WHERE ?=e.area and e.nombres=p.empleado;");
         $query->execute([$valor]);
-        echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<br> <h3>Datos del dispositivo</h3>";
+        echo "<table class='table table-hover table-sm' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -466,7 +492,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["nombres"]."</td>";
@@ -475,22 +501,21 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
         echo "</table>"; 
     }
-    //ver por agencia
-    public function vereagancia($valor){
+    public function vergeneral(){
         $query = $this->connect()->prepare("SELECT p.empleado, p.no_activo, p.tipo, p.so, p.edicion, p.licencia, p.marca, p.modelo, p.serie, p.ip, p.fecha_entrada, p.mack_pc, p.estado
             FROM empleado e, pc p
-            WHERE ?=e.agencia and e.nombres=p.empleado and e.estado='';");
-        $query->execute([$valor]);
-        echo "<h2>$valor</h2>";
-        echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+            WHERE e.nombres=p.empleado and e.estado='' ORDER BY e.agencia ASC");
+        $query->execute();
+        $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
+                echo "<th> No </th>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -504,7 +529,155 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<th> Software </th>";
+                echo "<th> Edicion </th>";
+                echo "<tr></thead>";
+        $resultado=$query->fetchAll();
+        foreach ($resultado as $key => $res) {
+                echo "<td>".$key."</td>";
+                echo "<td>".$res["empleado"]."</td>";
+                echo "<td>".$res["no_activo"]."</td>";
+                echo "<td>".$res["tipo"]."</td>";
+                echo "<td>".$res["so"]."</td>";
+                echo "<td>".$res["edicion"]."</td>";
+                echo "<td>".$res["licencia"]."</td>";
+                echo "<td>".$res["marca"]."</td>";
+                echo "<td>".$res["modelo"]."</td>";
+                echo "<td>".$res["serie"]."</td>";
+                echo "<td>".$res["ip"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
+                echo "<td>".$res["mack_pc"]."</td>";
+                echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
+                echo "</tr>";                                   
+        }
+        echo "</table>";
+    }
+    //ver datos generales
+    public function vergeneralp()
+    {
+        $items = 10;
+        $query = $this->connect()->prepare("SELECT * FROM pc");
+        $query->execute();
+        $paginas = ceil($query->rowCount()/$items);
+        if (isset($_GET['pagina'])) {
+            $pagina=$_GET['pagina'];
+        }else{
+            $pagina = 1;
+            $_GET['pagina']=1;
+        }
+        $atras =$pagina-1;
+        $siguente =$pagina+1;
+        $iniciar = ($pagina-1)*$items;
+        $query = ("SELECT p.empleado, p.no_activo, p.tipo, p.so, p.edicion, p.licencia, p.marca, p.modelo, p.serie, p.ip, p.fecha_entrada, p.mack_pc, p.estado,
+            e.agencia, s.nombre, s.pc, s.edicion FROM empleado e, pc p, software s
+            WHERE e.nombres=p.empleado and e.estado='' ORDER BY e.agencia ASC LIMIT :inicio,:fin");
+        $query_it = $this->connect()->prepare($query);
+        $query_it->bindParam(':inicio', $iniciar, PDO::PARAM_INT);
+        $query_it->bindParam(':fin', $items, PDO::PARAM_INT);
+        $query_it->execute();
+        //consultar software
+        $query = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software
+            WHERE ?=pc");
+        echo "</table>"; 
+        echo "<h3>Datos de equipo </h3>";
+        echo "<table class='table table-hover table-sm'>";     
+                echo "<thead class='thead-light'><tr>";
+                echo "<th> Agencia </th>";
+                echo "<th> Empleado </th>";
+                echo "<th> No activo </th>";
+                echo "<th> Tipo </th>";
+                echo "<th> SO </th>";
+                echo "<th> Edicion </th>";
+                echo "<th> Licencia </th>";
+                echo "<th> Marca </th>";
+                echo "<th> Modelo </th>";
+                echo "<th> Serie </th>";
+                echo "<th> IP </th>";
+                echo "<th> Fecha </th>";
+                echo "<th> MAC </th>";
+                echo "<th> Estado </th>";
+                echo "<th> Software </th>";
+                echo "<th> Edicion </th>";
+                echo "<tr></thead>";
+        $resultado=$query_it->fetchAll();
+        foreach ($resultado as $key =>$res) {
+                echo "<td>".$res["agencia"]."</td>";
+                echo "<td>".$res["empleado"]."</td>";
+                echo "<td>".$res["no_activo"]."</td>";
+                echo "<td>".$res["tipo"]."</td>";
+                echo "<td>".$res["so"]."</td>";
+                echo "<td>".$res["edicion"]."</td>";
+                echo "<td>".$res["licencia"]."</td>";
+                echo "<td>".$res["marca"]."</td>";
+                echo "<td>".$res["modelo"]."</td>";
+                echo "<td>".$res["serie"]."</td>";
+                echo "<td>".$res["ip"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
+                echo "<td>".$res["mack_pc"]."</td>";
+                echo "<td>".$res["estado"]."</td>";
+                $query->execute([$res["no_activo"]]);
+                $soft=$query->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
+                echo "</tr>";                                   
+        }
+        echo "</table></div>";
+        //calcular para nav
+        echo '<div class="nav-scroller py-1 mb-2"> <nav class="nav d-flex justify-content-center">
+        <ul class="pagination pagination-sm flex-sm-wrap">
+          <li class="page-item disabled';
+          echo $_GET['pagina']!=1 ? 'disabled':'';
+        echo '">
+            <a class="page-link" href="general.php?pagina='.$atras.'">Atras</a>
+          </li>';
+          for ($i=0;$i<$paginas;$i++){
+              $num=$i+1;
+              echo '<li class="page-item active';
+              echo $_GET['pagina']!=$num ? 'active':'';
+              echo '"><a class="page-link" href="general.php?pagina='.$num.'">'.$num.'</a></li>';
+          }
+        echo '<li class="page-item disabled';
+        
+        echo $_GET['pagina']!=$paginas ? 'disabled':'';
+        echo '">
+        <a class="page-link" href="general.php?pagina='.$siguente.'">Siguiente</a>
+      </li></ul></nav></div>';
+    }
+    //ver por agencia
+    public function vereagancia($valor){
+        $query = $this->connect()->prepare("SELECT p.empleado, p.no_activo, p.tipo, p.so, p.edicion, p.licencia, p.marca, p.modelo, p.serie, p.ip, p.fecha_entrada, p.mack_pc, p.estado
+            FROM empleado e, pc p
+            WHERE ?=e.agencia and e.nombres=p.empleado and e.estado='';");
+        $query->execute([$valor]);
+        echo "<h2>Agencia: $valor</h2>";
+        echo "<h3>Datos de equipo </h3>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
+                echo "<th> Empleado </th>";
+                echo "<th> No activo </th>";
+                echo "<th> Tipo </th>";
+                echo "<th> SO </th>";
+                echo "<th> Edicion </th>";
+                echo "<th> Licencia </th>";
+                echo "<th> Marca </th>";
+                echo "<th> Modelo </th>";
+                echo "<th> Serie </th>";
+                echo "<th> IP </th>";
+                echo "<th> Fecha </th>";
+                echo "<th> MAC </th>";
+                echo "<th> Estado </th>";
+                echo "<th> Software </th>";
+                echo "<th> Edición </th>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -517,9 +690,16 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
                 echo "</tr>";                                   
         }
         echo "</table>";
@@ -530,12 +710,12 @@ class User extends DB{
         WHERE ?=e.agencia and e.nombres=p.empleado;");
         $query->execute([$valor]);
         echo "<br> <h2>Datos del software </h2>";
-        echo "<table id='resultado1'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado1'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre de software </th>";
                 echo "<th> Edición </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["nombres"]."</td>";
@@ -550,9 +730,9 @@ class User extends DB{
             FROM empleado e, dispositivo p
             WHERE ?=e.agencia and e.nombres=p.empleado;");
         $query->execute([$valor]);
-        echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<br> <h3>Datos del dispositivo</h3>";
+        echo "<table class='table table-hover table-sm' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -561,7 +741,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -570,7 +750,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -580,10 +760,10 @@ class User extends DB{
     public function veractivo($valor){
         $query = $this->connect()->prepare("SELECT * FROM pc WHERE no_activo=?;");
         $query->execute([$valor]);
-        echo "<h2>$valor</h2>";
-        echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<h2>Activo del equipo: $valor</h2>";
+        echo "<h3>Datos de equipo </h3>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -597,7 +777,9 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<th> Software </th>";
+                echo "<th> Edición </th>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -610,28 +792,31 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
                 echo "</tr>";                                   
         }
         echo "</table>";
     }
     public function vereactivos($valor){
-        $query = $this->connect()->prepare("SELECT p.empleado, d.nombre, d.edicion
-        FROM software d, pc p
-        WHERE ?=p.no_activo and d.empleado=p.empleado;");
+        $query = $this->connect()->prepare("SELECT * FROM software WHERE pc=?");
         $query->execute([$valor]);
-        echo "<br> <h2>Datos del software </h2>";
-        echo "<table id='resultado2'>";     
-                echo "<tr>";
-                echo "<th> Empleado </th>";
+        echo "<br> <h3>Datos del software </h3>";
+        echo "<table class='table table-hover table-sm' id='resultado2'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Nombre de software </th>";
                 echo "<th> Edición </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
-                echo "<td>".$res["empleado"]."</td>";
                 echo "<td>".$res["nombre"]."</td>";
                 echo "<td>".$res["edicion"]."</td>";
                 echo "</tr>";                                   
@@ -641,9 +826,9 @@ class User extends DB{
     public function vereactivospc($valor){
         $query = $this->connect()->prepare("SELECT * FROM dispositivo Where no_activo=?;");
         $query->execute([$valor]);
-        echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<br> <h3>Datos del dispositivo</h3>";
+        echo "<table class='table table-hover table-sm' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -652,7 +837,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -661,7 +846,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -674,8 +859,8 @@ class User extends DB{
         $query->execute([$valor]);
         echo "<h2>$valor</h2>";
         echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -689,7 +874,9 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<th> Software </th>";
+                echo "<th> Edición </th>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -702,9 +889,16 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
+                $querys = $this->connect()->prepare("SELECT nombre, edicion, pc FROM software WHERE ?=pc");
+                $querys->execute([$res["no_activo"]]);
+                $soft=$querys->fetchAll();
+                foreach ($soft as $res) {
+                        echo "<td>".$res["nombre"]."</td>";
+                        echo "<td>".$res["edicion"]."</td>";
+                }
                 echo "</tr>";                                   
         }
         echo "</table>";
@@ -713,8 +907,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM dispositivo WHERE estado=?;");
         $query->execute([$valor]);
         echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado2'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado2'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -723,7 +917,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -732,7 +926,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -742,8 +936,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM red WHERE estado=?;");
         $query->execute([$valor]);
         echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Agencia </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -753,7 +947,7 @@ class User extends DB{
                 echo "<th> Ip </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["agencia"]."</td>";
@@ -763,7 +957,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["no_ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }
@@ -771,15 +965,12 @@ class User extends DB{
     }
 
     //Consultas de soporte
-    
-
     public function todosoporte(){
      $query = $this->connect()->prepare("SELECT * FROM soporte");
         $query->execute();
-        echo "<br> <h2>Todos los tickets:</h2>";
-        echo "<div class='ared'>
+        echo "<div class='table table-hover table-sm'>
         <table id='resultado'>";     
-                echo "<div><tr>";
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> ID ticket</th>";
                 echo "<th> Tecnico </th>";
                 echo "<th> Empleado </th>";
@@ -787,11 +978,11 @@ class User extends DB{
                 echo "<th> Puesto </th>";
                 echo "<th> Dirección Ip </th>";
                 echo "<th> Problema </th>";
+                echo "<th> Comentario</th>";
                 echo "<th> Estado </th>";
-                echo "<th> Comentario </th>";
                 echo "<th> Fecha de entrada </th>";
                 echo "<th> Fecha de solución </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["id"]."</td>";
@@ -801,13 +992,17 @@ class User extends DB{
                 echo "<td>".$res["puesto"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
                 echo "<td>".$res["problema"]."</td>";
+                echo "<td>".$res["cometario"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
-                echo "<td>".$res["Cometario"]."</td>";
-                echo "<td>".$res["fecha_activo"]."</td>";
-                echo "<td>".$res["fecha_solucion"]."</td>";
+                echo "<td>".date("d/m/Y H:i:s", strtotime($res["fecha_activo"]))."</td>";
+                if ($res["fecha_solucion"]=="") {
+                    echo "<td>".$res["fecha_solucion"]."</td>";
+                }else{
+                    echo "<td>".date("d/m/Y H:i:s", strtotime($res["fecha_solucion"]))."</td>";
+                }
                 echo "</tr>";                                   
         }
-        echo "</table> </div>";    
+        echo "</table>";    
     }
 
     public function adcopor(){
@@ -830,8 +1025,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM pc");
         $query->execute();
         echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -845,7 +1040,7 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -875,7 +1070,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>"; 
@@ -887,8 +1082,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM pc");
         $query->execute();
         echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -902,7 +1097,7 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -932,7 +1127,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>"; 
@@ -944,8 +1139,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM dispositivo");
         $query->execute();
         echo "<h2>Datos de dispositivo </h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -954,7 +1149,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -980,7 +1175,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>"; 
             }                                     
@@ -991,8 +1186,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM dispositivo");
         $query->execute();
         echo "<h2>Datos de dispositivo </h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<table class='table table-sm table-hover' id='resultado3'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -1001,7 +1196,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -1027,7 +1222,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>"; 
             }                                     
@@ -1038,8 +1233,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM red");
         $query->execute();
         echo "<h2>Datos de dispositivo </h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Agencia </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -1049,7 +1244,7 @@ class User extends DB{
                 echo "<th> Ip </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -1076,7 +1271,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["no_ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";
             }                                     
@@ -1087,8 +1282,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM red");
         $query->execute();
         echo "<h2>Datos de dispositivo </h2>";
-        echo "<table id='resultado3'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Agencia </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -1098,7 +1293,7 @@ class User extends DB{
                 echo "<th> Ip </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
             $fecha= $res["fecha_entrada"];
@@ -1125,7 +1320,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["no_ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>"; 
             }                                     
@@ -1137,8 +1332,8 @@ class User extends DB{
         $query->execute();
         echo "<h2></h2>";
         echo "<h2>Datos de equipo </h2>";
-        echo "<table id='resultado'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> No activo </th>";
                 echo "<th> Tipo </th>";
@@ -1152,7 +1347,7 @@ class User extends DB{
                 echo "<th> Fecha </th>";
                 echo "<th> MAC </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -1165,7 +1360,7 @@ class User extends DB{
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
                 echo "<td>".$res["ip"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["mack_pc"]."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
@@ -1177,8 +1372,8 @@ class User extends DB{
         $query = $this->connect()->prepare("SELECT * FROM dispositivo WHERE estatus='Inactivo';");
         $query->execute();
         echo "<br> <h2>Datos del dispositivo</h2>";
-        echo "<table id='resultado2'>";     
-                echo "<tr>";
+        echo "<table class='table table-hover table-sm' id='resultado2'>";     
+                echo "<thead class='thead-light'><tr>";
                 echo "<th> Empleado </th>";
                 echo "<th> Nombre </th>";
                 echo "<th> No activo </th>";
@@ -1187,7 +1382,7 @@ class User extends DB{
                 echo "<th> Serie </th>";
                 echo "<th> Fecha </th>";
                 echo "<th> Estado </th>";
-                echo "<tr>";
+                echo "<tr></thead>";
         $resultado=$query->fetchAll();
         foreach ($resultado as $res) {
                 echo "<td>".$res["empleado"]."</td>";
@@ -1196,7 +1391,7 @@ class User extends DB{
                 echo "<td>".$res["marca"]."</td>";
                 echo "<td>".$res["modelo"]."</td>";
                 echo "<td>".$res["serie"]."</td>";
-                echo "<td>".$res["fecha_entrada"]."</td>";
+                echo "<td>".date("d/m/Y", strtotime($res["fecha_entrada"]))."</td>";
                 echo "<td>".$res["estado"]."</td>";
                 echo "</tr>";                                   
         }

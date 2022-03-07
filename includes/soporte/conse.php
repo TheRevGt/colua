@@ -12,10 +12,9 @@ $user= new User();
 				$estado = $datos->estado;
 				$query = $user->connect()->prepare("SELECT * FROM soporte WHERE tecnico=? AND estado=?");
 		        $query->execute([$tecnico,$estado]);
-		        	echo "<br> <h2>Todos los tickets</h2>";
-			        echo "<div class='ared'>
-			        <table id='resultado'>";     
-			                echo "<div><tr>";
+		        	echo "<h2>Todos los tickets</h2>";
+			        echo "<table class='table table-hover table-sm' id='resultado'>";     
+			                echo "<thead class='thead-light'><tr>";
 			                echo "<th> ID ticket</th>";
 			                echo "<th> Empleado </th>";
 			                echo "<th> Agencia </th>";
@@ -25,7 +24,7 @@ $user= new User();
 			                echo "<th> Estado </th>";
 			                echo "<th> Fecha de entrada </th>";
 			                echo "<th> Fecha de solución </th>";
-			                echo "<tr>";
+			                echo "</thead><tr>";
 			        $resultado=$query->fetchAll();
 			        foreach ($resultado as $res) {
 			                echo "<td>".$res["id"]."</td>";
@@ -35,8 +34,12 @@ $user= new User();
 			                echo "<td>".$res["ip"]."</td>";
 			                echo "<td>".$res["problema"]."</td>";
 			                echo "<td>".$res["estado"]."</td>";
-			                echo "<td>".$res["fecha_activo"]."</td>";
-			                echo "<td>".$res["fecha_solucion"]."</td>";
+			                echo "<td>".date("d/m/Y H:i:s", strtotime($res["fecha_activo"]))."</td>";
+                if ($res["fecha_solucion"]=="") {
+                    echo "<td>".$res["fecha_solucion"]."</td>";
+                }else{
+                    echo "<td>".date("d/m/Y H:i:s", strtotime($res["fecha_solucion"]))."</td>";
+                }
 			                echo "</tr>";                                   
 			        }
 			        echo "</table> </div>";

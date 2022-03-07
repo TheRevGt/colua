@@ -9,13 +9,14 @@ $user= new User();
 			switch ($ruta) {
 				default:
 				$emple = $datos->empleado;
-				$query = $user->connect()->prepare("SELECT * FROM software WHERE pc=?");
-		        $query->execute([$emple]);
-		        $resultado=$query->fetchAll();
-		        foreach ($resultado as $res) {
-		        	echo '<option value="'.$res["nombre"].'">'.$res["nombre"].'</option>';	
-		           	//echo json_encode('<option value="'.$res["pc"].'">'.$res["nombre"].'</option> ');
-		        }
+				if ($emple != ""){
+					$query = $user->connect()->prepare("SELECT * FROM software WHERE pc=?");
+					$query->execute([$emple]);
+					$resultado=$query->fetchAll();
+					foreach ($resultado as $res) {
+						echo '<option value="'.$res["nombre"].'">'.$res["nombre"].'</option>';	
+					}
+				}
 				break;
 			}
 		break;

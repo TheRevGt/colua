@@ -9,14 +9,19 @@ $user= new User();
 			switch ($ruta) {
 				default:
 				$emple = $datos->empleado;
+				
 				$query = $user->connect()->prepare("SELECT * FROM dispositivo WHERE empleado=? and estatus=''");
 		        $query->execute([$emple]);
-		        $resultado=$query->fetchAll();
-		        foreach ($resultado as $res) {
-		        	echo '<option value="'.$res["no_activo"].'">'.$res["nombre"].' ('.$res["no_activo"].')</option> ';
-		        	//$estado='<option value="'.$res["estado"].'">'.$res["estado"].'</option> ';
-		        	//echo json_encode([$tipo]);
-		        }
+				$resultado=$query->fetchAll();
+				if($query->rowCount()){
+					foreach ($resultado as $res) {
+						echo '<option value="'.$res["no_activo"].'">'.$res["nombre"].' ('.$res["no_activo"].')</option> ';
+						//$estado='<option value="'.$res["estado"].'">'.$res["estado"].'</option> ';
+						//echo json_encode([$tipo]);
+					}
+				}else{
+					echo '<option value="none">Sin dispositivo</option>';
+				}
 				break;
 			}
 		break;

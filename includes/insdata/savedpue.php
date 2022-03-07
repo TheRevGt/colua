@@ -15,7 +15,7 @@ $user= new User();
 					$sql="INSERT INTO puesto(nombre) VALUES(?)";
 	        		$stmt=$user->connect()->prepare($sql);
 			        if ($stmt->execute([$nombre])) {
-			            echo ("Área agregado");
+			            echo ("Puesto agregado");
 			        }else{
 			        	echo ("Error");
 			        }

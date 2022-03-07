@@ -12,10 +12,10 @@ $user= new User();
 					$nombre = $datos[$i]->nombre;
 					$edicion = $datos[$i]->edicion;
 					$emple = $datos[$i]->empleado;
-					$idp= $datos[$i]->activop;
+					$ac= $datos[$i]->activop;
 					$sql="INSERT INTO software(nombre,edicion,empleado,pc) VALUES(?,?,?,?)";
 	        			$stmt=$user->connect()->prepare($sql);
-		            if ($stmt->execute([$nombre,$edicion,$emple,$idp])) {
+		            if ($stmt->execute([$nombre,$edicion,$emple,$ac])) {
 		                echo "Softeares agregados";
 		            }else{
 		                echo "Error";

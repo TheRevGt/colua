@@ -24,14 +24,14 @@ $user= new User();
 					$mac = $datos->mac;
 					$estado = $datos->estado;
 					$estatus = $datos->estatus;
-					if ($nempleado=="nuevo") {
+					if ($nempleado=="none") {
 						$sql =("UPDATE pc SET empleado=?, no_activo=?, tipo=?, so=?, edicion=?, licencia=?, marca=?, modelo=?, serie=?, ip=?, fecha_entrada=?, mack_pc=?, estado=?, estatus=? where no_activo=?");
 				        $stmt=$user->connect()->prepare($sql);
 						if ($stmt->execute([$empleado,$activo,$tipo,$so,$edicion,$lice,$marca,$modelo,$serie,$ip,$fecha,$mac,$estado,$estatus,$id])) {
 							#echo "Equipo actualizado";
-							$sql =("UPDATE software SET pc=? where pc=?");
+							$sql =("UPDATE software SET pc=?, empleado=? where pc=?");
 					        $stmt=$user->connect()->prepare($sql);
-							if ($stmt->execute([$activo,$id])) {
+							if ($stmt->execute([$activo,$empleado,$id])) {
 								echo "Equipo actualizado";
 							}else{
 								echo "Error";
@@ -45,9 +45,9 @@ $user= new User();
 				        $stmt=$user->connect()->prepare($sql);
 						if ($stmt->execute([$nempleado,$activo,$tipo,$so,$edicion,$lice,$marca,$modelo,$serie,$ip,$fecha,$mac,$estado,$estatus,$id])) {
 							#echo "Equipo actualizado";
-							$sql =("UPDATE software SET pc=? where pc=?");
+							$sql =("UPDATE software SET pc=?, empleado=? where pc=? and empleado=?");
 					        $stmt=$user->connect()->prepare($sql);
-							if ($stmt->execute([$activo,$id])) {
+							if ($stmt->execute([$activo,$nempleado,$id,$empleado])) {
 								echo "Equipo actualizado";
 							}else{
 								echo "Error";

@@ -10,7 +10,7 @@ function dispoac1(){
   vdisp();
 	axios.post('../../includes/info/vrdispo.php', idis)
   .then(function (response) {
-    document.getElementById('d_nombre').innerHTML=response.data[0];
+    //document.getElementById('d_nombre').innerHTML=response.data[0];
     document.getElementById('opd').value=response.data[1];
     document.getElementById('di_act').value=response.data[2];
     document.getElementById('marca').value=response.data[3];

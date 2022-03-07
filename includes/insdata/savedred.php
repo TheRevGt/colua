@@ -18,7 +18,6 @@ $user= new User();
 					$ip = $datos->ip;
 					$fecha = $datos->fecha;
 					$estado = $datos->estado;
-					echo $codigo;
 					if ($codigo=="") {
 						$query = $user->connect()->prepare('SELECT * FROM red order by id desc limit 1');
 				        $query->execute();
